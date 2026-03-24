@@ -16,7 +16,7 @@
         }
         a { color: #0000FF; text-decoration: none; cursor: pointer; }
         
-        /* 1 & 6. 헤더와 푸터 (수정 완벽 반영) */
+        /* 헤더와 푸터 */
         header {
             border: 1px solid #0000FF;
             padding: 15px 20px;
@@ -52,25 +52,22 @@
         }
         .post-date { font-size: 12px; margin-bottom: 10px; }
         
-        /* 2. 제목은 무조건 크고 굵게! 본문은 작게! */
         .post-title {
             display: block;
-            font-size: 32px !important; /* 압도적으로 크게 */
-            font-weight: 900 !important; /* 가장 굵게 */
+            font-size: 32px !important; 
+            font-weight: 900 !important; 
             margin-bottom: 15px;
         }
         .post-excerpt {
-            font-size: 14px !important; /* 본문은 확실히 작게 */
+            font-size: 14px !important; 
             font-weight: normal !important;
             margin-bottom: 25px;
-            /* 본문 5줄 제한 강제 적용 */
             display: -webkit-box !important;
             -webkit-line-clamp: 5 !important;
             -webkit-box-orient: vertical !important;
             overflow: hidden !important;
         }
         
-        /* 3. 태그 (분류 기능) */
         .tag-list a {
             font-size: 13px;
             text-decoration: underline;
@@ -78,22 +75,38 @@
             font-weight: bold;
         }
 
-        /* --- 4 & 5. 세부 글(하부 페이지) 스타일 --- */
+        /* --- 세부 글(하부 페이지) 스타일 --- */
         .detail-wrap {
-            border-top: 4px double #0000FF;
-            padding-top: 40px;
+            /* 상단에 있던 이중선 삭제 */
+            padding-top: 20px;
         }
         .detail-title {
-            font-size: 36px !important; /* 세부 페이지 제목은 더 크게 */
+            font-size: 36px !important; 
             font-weight: 900 !important;
             margin-bottom: 30px;
             line-height: 1.3;
+            /* 제목 바로 아래로 이중선 이동 */
+            border-bottom: 3px double #0000FF;
+            padding-bottom: 20px;
         }
         .detail-content {
-            font-size: 16px !important; /* 본문 정상 크기 */
-            white-space: pre-wrap; /* 엔터(줄바꿈) 완벽 유지 */
+            font-size: 16px !important; 
+            white-space: pre-wrap; 
             margin-bottom: 50px;
         }
+        
+        /* 이전글/다음글 네비게이션 */
+        .post-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px; /* 버튼 사이 간격 */
+            margin-top: 50px;
+            font-weight: bold;
+        }
+        .post-nav a { text-decoration: none; }
+        .post-nav a:hover { text-decoration: underline; }
+        .nav-hidden { visibility: hidden; } /* 자리 유지를 위한 투명 클래스 */
     </style>
 </head>
 <body>
@@ -112,10 +125,9 @@
     </footer>
 
     <script>
-        // ★ 여기에 구글 스프레드시트 CSV 웹 게시 링크를 넣으세요! ★
+        // 1. 전달해주신 CSV 링크 하드코딩 완료
         const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTTMsp7P7HBbupv1HqtWgw8koVO9p28myR3bFmMfLdaAaGeo72ufEhZo3meZHzjLTskYDeJg-TI4kBD/pub?gid=0&single=true&output=csv';
 
-        // 가장 안정적인 CSV 파싱 (데이터 엉킴 방지)
         function parseCSV(text) {
             const rows = []; let row = []; let cell = ''; let isQuoted = false;
             for (let i = 0; i < text.length; i++) {
@@ -140,15 +152,19 @@
 
         const app = document.getElementById('app');
 
-        // 목록 페이지 그리기
         function renderList(posts, currentTag = null) {
             app.innerHTML = '';
             if (currentTag) app.innerHTML = `<h2 style="text-align:center; margin-bottom: 40px;">#${currentTag}</h2>`;
             if (posts.length === 0) { app.innerHTML += `<p style="text-align:center;">글이 없습니다.</p>`; return; }
 
-            posts.reverse().forEach(post => {
+            // 배열을 복사한 뒤 역순(최신순)으로 렌더링
+            [...posts].reverse().forEach(post => {
                 const tags = post.tags ? post.tags.split(',').map(t => t.trim()).filter(t => t) : [];
-                const tagsHTML = tags.map(t => `<a href="?tag=${encodeURIComponent(t)}">#${t}</a>`).join('');
+                // CSV에 #을 직접 입력했을 경우 ##으로 나오는 것 방지
+                const tagsHTML = tags.map(t => {
+                    const cleanTag = t.startsWith('#') ? t.substring(1) : t;
+                    return `<a href="?tag=${encodeURIComponent(cleanTag)}">#${cleanTag}</a>`;
+                }).join('');
                 
                 app.innerHTML += `
                     <div class="post-card">
@@ -161,19 +177,35 @@
             });
         }
 
-        // 세부 페이지 그리기
-        function renderPost(post) {
+        // 3. 이전 글, 다음 글 기능 추가를 위해 전체 데이터(allPosts)를 함께 받음
+        function renderPost(post, allPosts) {
             if (!post) { app.innerHTML = `<p style="text-align:center;">글을 찾을 수 없습니다.</p>`; return; }
             
             const tags = post.tags ? post.tags.split(',').map(t => t.trim()).filter(t => t) : [];
-            const tagsHTML = tags.map(t => `<a href="?tag=${encodeURIComponent(t)}">#${t}</a>`).join('');
+            const tagsHTML = tags.map(t => {
+                const cleanTag = t.startsWith('#') ? t.substring(1) : t;
+                return `<a href="?tag=${encodeURIComponent(cleanTag)}">#${cleanTag}</a>`;
+            }).join('  ');
 
+            // 현재 글의 위치(인덱스)를 찾아 이전/다음 글 계산
+            const currentIndex = allPosts.findIndex(p => p.id === post.id);
+            const prevPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
+            const nextPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null;
+
+            // 네비게이션 버튼 HTML 생성 (글이 없으면 투명하게 처리하여 가운데 정렬 유지)
+            let navHTML = `<div class="post-nav">`;
+            navHTML += prevPost ? `<a href="?post=${prevPost.id}">[ 이전 글 ]</a>` : `<span class="nav-hidden">[ 이전 글 ]</span>`;
+            navHTML += `<a href="?">[ 돌아가기 ]</a>`;
+            navHTML += nextPost ? `<a href="?post=${nextPost.id}">[ 다음 글 ]</a>` : `<span class="nav-hidden">[ 다음 글 ]</span>`;
+            navHTML += `</div>`;
+
+            // 2. 제목 바로 아래에 선이 그어지도록 detail-title 스타일 적용됨
             app.innerHTML = `
                 <div class="detail-wrap">
                     <div class="detail-title">${post.title || '제목 없음'}</div>
                     <div class="detail-content">${post.content || ''}</div>
                     <div class="tag-list" style="text-align:center; margin-top:40px;">${tagsHTML}</div>
-                    <div style="text-align:center; margin-top:30px;"><a href="?">[ 돌아가기 ]</a></div>
+                    ${navHTML}
                 </div>
             `;
         }
@@ -188,14 +220,17 @@
                 const tag = params.get('tag');
 
                 if (postId) {
-                    renderPost(data.find(p => p.id === postId));
+                    renderPost(data.find(p => p.id === postId), data);
                 } else if (tag) {
-                    renderList(data.filter(p => p.tags && p.tags.split(',').map(t=>t.trim()).includes(tag)), tag);
+                    renderList(data.filter(p => p.tags && p.tags.split(',').map(t => {
+                        let clean = t.trim();
+                        return clean.startsWith('#') ? clean.substring(1) : clean;
+                    }).includes(tag)), tag);
                 } else {
                     renderList(data);
                 }
             } catch (err) {
-                app.innerHTML = `<p style="text-align:center;">DB 오류 발생</p>`;
+                app.innerHTML = `<p style="text-align:center;">DB 오류 발생: 링크를 확인해주세요.</p>`;
             }
         }
         init();
