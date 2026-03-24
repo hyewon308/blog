@@ -3,26 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Navhooe // 매원 - 정보 블로그</title>
+    <title>Navhooe // 매원 - 블로그</title>
     <style>
-        /* 기본 리셋 및 전역 스타일 */
+        /* 전역 스타일 */
         * { box-sizing: border-box; }
         body {
-            background-color: #E2DAFC; /* 연보라색 배경 유지 */
-            color: #0000FF; /* 블루 텍스트 유지 */
+            background-color: #E2DAFC;
+            color: #0000FF;
             font-family: 'Courier New', Courier, 'Noto Sans KR', sans-serif;
             margin: 0; 
             padding: 10px;
             line-height: 1.6;
             word-break: keep-all;
         }
-        a {
-            color: #0000FF;
-            text-decoration: none;
-            cursor: pointer;
-        }
+        a { color: #0000FF; text-decoration: none; cursor: pointer; }
+        a:hover { text-decoration: underline; }
         
-        /* 헤더 디자인 수정사항 1 */
+        /* 헤더 */
         header {
             border: 1px solid #0000FF;
             padding: 10px 20px;
@@ -31,22 +28,19 @@
             align-items: center;
             font-weight: bold;
             margin-bottom: 50px;
+            background-color: #E2DAFC;
         }
-        header .logo {
-            font-size: 1.2rem;
-            white-space: pre; /* 줄바꿈 유지 */
-        }
-        header .right-menu a {
-            margin-left: 15px;
-        }
+        header .logo { font-size: 1.2rem; }
+        header .right-menu a { margin-left: 15px; }
 
         /* 메인 컨테이너 */
         #app {
             max-width: 800px;
             margin: 0 auto;
+            min-height: 60vh;
         }
 
-        /* 겹쳐진 박스 (메인 페이지 게시글 목록) */
+        /* 메인 페이지: 게시글 목록 카드 */
         .post-card {
             border: 1px solid #0000FF;
             padding: 40px;
@@ -55,78 +49,80 @@
             background-color: #E2DAFC;
             z-index: 1;
         }
-        /* 뒤에 깔리는 빈 박스 테두리 */
         .post-card::after {
             content: "";
             position: absolute;
-            top: 5px;  /* 우측 하단으로 살짝 이동 */
-            left: 5px; /* 우측 하단으로 살짝 이동 */
-            width: 100%;
-            height: 100%;
+            top: 5px; left: 5px;
+            width: 100%; height: 100%;
             border: 1px solid #0000FF;
             z-index: -1;
         }
         .post-date {
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             margin-bottom: 15px;
         }
-        /* 수정사항 2: 목록에서 제목을 크고 굵게 */
+        /* 1. 제목은 무조건 크고 굵게 */
         .post-title {
-            font-size: 1.8rem; /* 더 크게 */
-            font-weight: bold; /* 더 굵게 */
+            font-size: 2rem !important; 
+            font-weight: bold !important;
             margin-bottom: 20px;
-            word-spacing: 2px;
+            display: block;
         }
-        /* 수정사항 2, 3: 목록에서 본문을 작게, 5줄 제한 */
+        /* 2. 본문은 작게, 무조건 5줄까지만 출력 */
         .post-excerpt {
-            font-size: 0.8rem; /* 더 작게 */
+            font-size: 1rem !important;
+            font-weight: normal !important;
             margin-bottom: 30px;
-            display: -webkit-box;
-            -webkit-line-clamp: 5; /* 5줄까지 제한 */
-            -webkit-box-orient: vertical;
-            overflow: hidden;
+            display: -webkit-box !important;
+            -webkit-line-clamp: 5 !important;
+            -webkit-box-orient: vertical !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            line-height: 1.5;
         }
-        .post-tags {
-            font-size: 0.85rem;
-        }
-        .post-tags a {
-            text-decoration: underline;
-            margin-right: 10px;
-        }
+        /* 3. 태그 스타일 */
+        .post-tags { font-size: 0.9rem; font-weight: bold; }
+        .post-tags a { margin-right: 15px; text-decoration: underline; }
 
-        /* 세부 글 페이지 디자인 */
+        /* 4. 세부 글(하부 페이지) 디자인 */
         .detail-view {
-            border-top: 3px double #0000FF; /* 이중선 유지 */
-            padding-top: 50px;
+            border-top: 3px double #0000FF; /* 이중선 */
+            padding-top: 40px;
             padding-bottom: 50px;
         }
-        /* 수정사항 5: 제목 출력 유지, 이미지 3 스타일 적용 */
+        /* 세부 페이지: 제목 확실하게 출력 */
         .detail-title {
-            font-size: 2.2rem;
-            font-weight: bold;
+            font-size: 2.5rem !important;
+            font-weight: bold !important;
             margin-bottom: 30px;
             text-align: left;
+            border-bottom: 1px solid #0000FF;
+            padding-bottom: 20px;
         }
+        /* 세부 페이지: 본문 정상 크기로 전체 출력 */
         .detail-content {
-            font-size: 1.1rem;
+            font-size: 1.1rem !important;
+            font-weight: normal !important;
             margin-bottom: 40px;
-            white-space: pre-wrap; /* 줄바꿈 유지 */
+            white-space: pre-wrap; /* 줄바꿈 완벽 유지 */
+            line-height: 1.8;
         }
 
-        /* 푸터 수정사항 6 */
+        /* 6. 푸터 */
         footer {
             text-align: center;
-            margin-top: 50px;
+            margin-top: 60px;
             padding-bottom: 20px;
             font-size: 0.9rem;
-            text-decoration: underline;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
 
     <header>
-        <a href="?" class="logo">Navhooe // 매원</a> <div class="right-menu">
+        <a href="?" class="logo">Navhooe // 매원</a>
+        <div class="right-menu">
             <a href="?">정보</a>
             <a href="?">블로그</a>
         </div>
@@ -137,123 +133,139 @@
     </div>
 
     <footer>
-        <a href="#">navhooe © all rights reserved</a> </footer>
+        <div>navhooe © all rights reserved</div>
+    </footer>
 
     <script>
-        // ★ 여기에 구글 스프레드시트 CSV 웹 게시 링크를 넣으세요! ★
+        // ★ 1. 본인의 구글 스프레드시트 CSV 웹 게시 링크를 넣으세요 ★
         const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTTMsp7P7HBbupv1HqtWgw8koVO9p28myR3bFmMfLdaAaGeo72ufEhZo3meZHzjLTskYDeJg-TI4kBD/pub?gid=0&single=true&output=csv';
 
-        // 간단한 CSV 파서 (따옴표 안의 쉼표 무시)
+        // ★ 2. 줄바꿈이 포함된 긴 본문도 완벽하게 파싱하는 강력한 CSV 파서 ★
         function parseCSV(text) {
-            const rows = [];
-            const regex = /(?:,|\n|^)("(?:(?:"")*[^"]*)*"|[^",\n]*|(?:\n|$))/g;
-            let match;
-            let row = [];
-            while ((match = regex.exec(text))) {
-                let value = match[1];
-                if (value === undefined) value = "";
-                if (value.startsWith('"') && value.endsWith('"')) {
-                    value = value.substring(1, value.length - 1).replace(/""/g, '"');
-                }
-                row.push(value.trim());
-                if (match[0].startsWith('\n') || match[0].startsWith('\r')) {
-                    rows.push(row);
-                    row = [];
-                }
+            let p = '', row = [''], ret = [row], i = 0, r = 0, s = !0, l;
+            for (l of text) {
+                if ('"' === l) {
+                    if (s && l === p) row[i] += l;
+                    s = !s;
+                } else if (',' === l && s) l = row[++i] = '';
+                else if ('\n' === l && s) {
+                    if ('\r' === p) row[i] = row[i].slice(0, -1);
+                    row = ret[++r] = [l = '']; i = 0;
+                } else row[i] += l;
+                p = l;
             }
-            if (row.length > 0) rows.push(row);
             
-            const headers = rows[0];
-            return rows.slice(1).map(row => {
+            const headers = ret[0].map(h => h.trim().toLowerCase()); // 헤더 소문자로 통일
+            const data = [];
+            for (let j = 1; j < ret.length; j++) {
+                if (ret[j].length === 1 && ret[j][0] === "") continue;
                 let obj = {};
-                headers.forEach((header, i) => obj[header.trim()] = row[i]);
-                return obj;
-            }).filter(item => item.id); // 빈 줄 제거
+                for (let k = 0; k < headers.length; k++) {
+                    obj[headers[k]] = ret[j][k] ? ret[j][k].trim() : "";
+                }
+                if (obj.id) data.push(obj);
+            }
+            return data;
         }
 
         const app = document.getElementById('app');
 
-        // 메인/태그 리스트 렌더링 함수
+        // 목록 렌더링 (메인 페이지 & 태그 필터링)
         function renderList(posts, filterTag = null) {
             app.innerHTML = '';
             
             if(filterTag) {
-                app.innerHTML += `<h3 style="text-align:center; margin-bottom:40px;">#${filterTag} 태그된 글</h3>`;
+                app.innerHTML += `<div style="text-align:center; font-size:1.2rem; font-weight:bold; margin-bottom:40px;">[ #${filterTag} ] 태그된 글</div>`;
             }
 
-            posts.forEach(post => {
-                const tagsArray = post.tags ? post.tags.split(',').map(t => t.trim()) : [];
-                const tagsHTML = tagsArray.map(tag => `<a href="?tag=${encodeURIComponent(tag)}">${tag}</a>`).join('');
-                // 목록에서는 첫번째 태그를 카테고리처럼 상단에 표시 (이미지 참고)
-                const categoryHTML = tagsArray.length > 0 ? `<div style="margin-bottom:15px; font-size:0.9rem;"><a href="?tag=${encodeURIComponent(tagsArray[0])}">${tagsArray[0]}</a></div>` : '';
+            if(posts.length === 0) {
+                app.innerHTML += '<p style="text-align:center;">해당하는 글이 없습니다.</p>';
+                return;
+            }
+
+            // 최신 글이 위로 오도록 역순 정렬 (id 기준)
+            posts.reverse().forEach(post => {
+                const title = post.title || '제목 없음';
+                const date = post.date || '';
+                const content = post.content || '';
+                
+                // 태그 쪼개기
+                let tagsArray = [];
+                if(post.tags) {
+                    tagsArray = post.tags.split(',').map(t => t.trim()).filter(t => t !== "");
+                }
+                // 태그 링크 생성
+                const tagsHTML = tagsArray.map(tag => `<a href="?tag=${encodeURIComponent(tag)}">#${tag}</a>`).join('');
 
                 const card = document.createElement('div');
                 card.className = 'post-card';
                 card.innerHTML = `
-                    <div class="post-date">${post.date}</div>
-                    <div class="post-title"><a href="?post=${post.id}">${post.title}</a></div>
-                    <div class="post-excerpt">${post.content}</div>
-                    ${categoryHTML}
+                    <div class="post-date">${date}</div>
+                    <a href="?post=${post.id}" class="post-title">${title}</a>
+                    <div class="post-excerpt">${content}</div>
                     <div class="post-tags">${tagsHTML}</div>
                 `;
                 app.appendChild(card);
             });
-
-            if(posts.length === 0) app.innerHTML = '<p style="text-align:center;">작성된 글이 없습니다.</p>';
         }
 
-        // 상세 글 렌더링 함수
+        // 상세 글 렌더링 (하위 페이지)
         function renderPost(post) {
             if(!post) {
-                app.innerHTML = '<p style="text-align:center;">글을 찾을 수 없습니다.</p>';
+                app.innerHTML = '<p style="text-align:center;">글을 찾을 수 없습니다.</p><div style="text-align:center;"><a href="?">돌아가기</a></div>';
                 return;
             }
-            const tagsArray = post.tags ? post.tags.split(',').map(t => t.trim()) : [];
-            const tagsHTML = tagsArray.map(tag => `<a href="?tag=${encodeURIComponent(tag)}">${tag}</a>`).join('');
-            const categoryHTML = tagsArray.length > 0 ? `<div style="margin-bottom:30px; font-size:1rem;"><a href="?tag=${encodeURIComponent(tagsArray[0])}">${tagsArray[0]}</a></div>` : '';
+            
+            const title = post.title || '제목 없음';
+            const content = post.content || '';
+            let tagsArray = [];
+            if(post.tags) {
+                tagsArray = post.tags.split(',').map(t => t.trim()).filter(t => t !== "");
+            }
+            const tagsHTML = tagsArray.map(tag => `<a href="?tag=${encodeURIComponent(tag)}">#${tag}</a>`).join('');
 
-            // 수정사항 5: 제목(detail-title) 출력 유지, 이미지 3 스타일 적용
             app.innerHTML = `
                 <div class="detail-view">
-                    <div class="detail-title">${post.title}</div>
-                    <div class="detail-content">${post.content}</div>
-                    ${categoryHTML}
-                    <div class="post-tags">${tagsHTML}</div>
+                    <div class="detail-title">${title}</div>
+                    <div class="detail-content">${content}</div>
+                    <div class="post-tags" style="text-align: center; margin-top: 50px;">${tagsHTML}</div>
+                    <div style="text-align: center; margin-top: 30px;">
+                        <a href="?" style="font-weight:bold;">[ 목록으로 돌아가기 ]</a>
+                    </div>
                 </div>
             `;
         }
 
-        // 초기화 및 라우팅
+        // 초기화 및 라우팅 (URL 파라미터 감지)
         async function init() {
             try {
                 const response = await fetch(SHEET_CSV_URL);
                 const csvData = await response.text();
                 const posts = parseCSV(csvData);
 
-                // URL에서 파라미터 읽기
                 const urlParams = new URLSearchParams(window.location.search);
                 const postId = urlParams.get('post');
                 const tag = urlParams.get('tag');
 
                 if (postId) {
-                    // 세부 페이지 (id가 일치하는 글 찾기)
+                    // id가 일치하는 단일 포스트 찾기
                     const post = posts.find(p => p.id === postId);
                     renderPost(post);
                 } else if (tag) {
-                    // 수정사항 4: 태그 필터링 로직 수정 (더 정확한 배열 검사)
-                    const filteredPosts = posts.filter(post => {
-                        if (!post.tags) return false;
-                        const tagsArray = post.tags.split(',').map(t => t.trim());
-                        return tagsArray.includes(tag);
+                    // 태그가 포함된 포스트만 필터링
+                    const filteredPosts = posts.filter(p => {
+                        if (!p.tags) return false;
+                        const tArray = p.tags.split(',').map(t => t.trim());
+                        return tArray.includes(tag);
                     });
                     renderList(filteredPosts, tag);
                 } else {
-                    // 전체 메인 목록 (최신순을 원하면 posts.reverse() 등 추가 가능)
+                    // 전체 목록
                     renderList(posts);
                 }
             } catch (error) {
-                app.innerHTML = '<p style="text-align:center;">데이터를 불러오는 데 실패했습니다. 스프레드시트 URL을 확인해주세요.</p>';
-                console.error(error);
+                app.innerHTML = '<p style="text-align:center;">데이터를 불러오는 데 실패했습니다.<br>스프레드시트 URL이 정확한지 확인해주세요.</p>';
+                console.error("데이터 로드 에러:", error);
             }
         }
 
