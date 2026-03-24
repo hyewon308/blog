@@ -3,118 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Navhooe // 매원 - 블로그</title>
+    <title>Navhooe // 매원</title>
     <style>
-        /* 전역 스타일 */
-        * { box-sizing: border-box; }
+        /* 초기화 및 기본 셋팅 */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             background-color: #E2DAFC;
             color: #0000FF;
-            font-family: 'Courier New', Courier, 'Noto Sans KR', sans-serif;
-            margin: 0; 
-            padding: 10px;
+            font-family: 'Courier New', Courier, monospace, 'Noto Sans KR', sans-serif;
+            padding: 15px;
             line-height: 1.6;
-            word-break: keep-all;
         }
         a { color: #0000FF; text-decoration: none; cursor: pointer; }
-        a:hover { text-decoration: underline; }
         
-        /* 헤더 */
+        /* 1 & 6. 헤더와 푸터 (수정 완벽 반영) */
         header {
             border: 1px solid #0000FF;
-            padding: 10px 20px;
+            padding: 15px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             font-weight: bold;
             margin-bottom: 50px;
-            background-color: #E2DAFC;
         }
-        header .logo { font-size: 1.2rem; }
-        header .right-menu a { margin-left: 15px; }
-
-        /* 메인 컨테이너 */
-        #app {
-            max-width: 800px;
-            margin: 0 auto;
-            min-height: 60vh;
+        .logo { font-size: 1.2rem !important; }
+        footer {
+            text-align: center;
+            margin-top: 80px;
+            padding-bottom: 30px;
+            font-size: 14px !important;
+            font-weight: bold;
         }
 
-        /* 메인 페이지: 게시글 목록 카드 */
+        #app { max-width: 800px; margin: 0 auto; min-height: 50vh; }
+
+        /* --- 메인 목록 페이지 스타일 --- */
         .post-card {
             border: 1px solid #0000FF;
-            padding: 40px;
-            margin-bottom: 60px;
+            padding: 35px;
+            margin-bottom: 50px;
             position: relative;
             background-color: #E2DAFC;
             z-index: 1;
         }
         .post-card::after {
-            content: "";
-            position: absolute;
-            top: 5px; left: 5px;
-            width: 100%; height: 100%;
-            border: 1px solid #0000FF;
-            z-index: -1;
+            content: ""; position: absolute; top: 6px; left: 6px;
+            width: 100%; height: 100%; border: 1px solid #0000FF; z-index: -1;
         }
-        .post-date {
-            font-size: 0.9rem;
+        .post-date { font-size: 12px; margin-bottom: 10px; }
+        
+        /* 2. 제목은 무조건 크고 굵게! 본문은 작게! */
+        .post-title {
+            display: block;
+            font-size: 32px !important; /* 압도적으로 크게 */
+            font-weight: 900 !important; /* 가장 굵게 */
             margin-bottom: 15px;
         }
-        /* 1. 제목은 무조건 크고 굵게 */
-        .post-title {
-            font-size: 2rem !important; 
-            font-weight: bold !important;
-            margin-bottom: 20px;
-            display: block;
-        }
-        /* 2. 본문은 작게, 무조건 5줄까지만 출력 */
         .post-excerpt {
-            font-size: 1rem !important;
+            font-size: 14px !important; /* 본문은 확실히 작게 */
             font-weight: normal !important;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
+            /* 본문 5줄 제한 강제 적용 */
             display: -webkit-box !important;
             -webkit-line-clamp: 5 !important;
             -webkit-box-orient: vertical !important;
             overflow: hidden !important;
-            text-overflow: ellipsis !important;
-            line-height: 1.5;
         }
-        /* 3. 태그 스타일 */
-        .post-tags { font-size: 0.9rem; font-weight: bold; }
-        .post-tags a { margin-right: 15px; text-decoration: underline; }
-
-        /* 4. 세부 글(하부 페이지) 디자인 */
-        .detail-view {
-            border-top: 3px double #0000FF; /* 이중선 */
-            padding-top: 40px;
-            padding-bottom: 50px;
-        }
-        /* 세부 페이지: 제목 확실하게 출력 */
-        .detail-title {
-            font-size: 2.5rem !important;
-            font-weight: bold !important;
-            margin-bottom: 30px;
-            text-align: left;
-            border-bottom: 1px solid #0000FF;
-            padding-bottom: 20px;
-        }
-        /* 세부 페이지: 본문 정상 크기로 전체 출력 */
-        .detail-content {
-            font-size: 1.1rem !important;
-            font-weight: normal !important;
-            margin-bottom: 40px;
-            white-space: pre-wrap; /* 줄바꿈 완벽 유지 */
-            line-height: 1.8;
-        }
-
-        /* 6. 푸터 */
-        footer {
-            text-align: center;
-            margin-top: 60px;
-            padding-bottom: 20px;
-            font-size: 0.9rem;
+        
+        /* 3. 태그 (분류 기능) */
+        .tag-list a {
+            font-size: 13px;
+            text-decoration: underline;
+            margin-right: 15px;
             font-weight: bold;
+        }
+
+        /* --- 4 & 5. 세부 글(하부 페이지) 스타일 --- */
+        .detail-wrap {
+            border-top: 4px double #0000FF;
+            padding-top: 40px;
+        }
+        .detail-title {
+            font-size: 36px !important; /* 세부 페이지 제목은 더 크게 */
+            font-weight: 900 !important;
+            margin-bottom: 30px;
+            line-height: 1.3;
+        }
+        .detail-content {
+            font-size: 16px !important; /* 본문 정상 크기 */
+            white-space: pre-wrap; /* 엔터(줄바꿈) 완벽 유지 */
+            margin-bottom: 50px;
         }
     </style>
 </head>
@@ -122,153 +100,104 @@
 
     <header>
         <a href="?" class="logo">Navhooe // 매원</a>
-        <div class="right-menu">
-            <a href="?">정보</a>
-            <a href="?">블로그</a>
+        <div>
+            <a href="?">정보</a> &nbsp;&nbsp;&nbsp; <a href="?">블로그</a>
         </div>
     </header>
 
-    <div id="app">
-        <p style="text-align:center;">데이터를 불러오는 중입니다...</p>
-    </div>
+    <div id="app"><p style="text-align:center;">DB 연결 중...</p></div>
 
     <footer>
-        <div>navhooe © all rights reserved</div>
+        navhooe &copy; all rights reserved
     </footer>
 
     <script>
-        // ★ 1. 본인의 구글 스프레드시트 CSV 웹 게시 링크를 넣으세요 ★
+        // ★ 여기에 구글 스프레드시트 CSV 웹 게시 링크를 넣으세요! ★
         const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTTMsp7P7HBbupv1HqtWgw8koVO9p28myR3bFmMfLdaAaGeo72ufEhZo3meZHzjLTskYDeJg-TI4kBD/pub?gid=0&single=true&output=csv';
 
-        // ★ 2. 줄바꿈이 포함된 긴 본문도 완벽하게 파싱하는 강력한 CSV 파서 ★
+        // 가장 안정적인 CSV 파싱 (데이터 엉킴 방지)
         function parseCSV(text) {
-            let p = '', row = [''], ret = [row], i = 0, r = 0, s = !0, l;
-            for (l of text) {
-                if ('"' === l) {
-                    if (s && l === p) row[i] += l;
-                    s = !s;
-                } else if (',' === l && s) l = row[++i] = '';
-                else if ('\n' === l && s) {
-                    if ('\r' === p) row[i] = row[i].slice(0, -1);
-                    row = ret[++r] = [l = '']; i = 0;
-                } else row[i] += l;
-                p = l;
+            const rows = []; let row = []; let cell = ''; let isQuoted = false;
+            for (let i = 0; i < text.length; i++) {
+                let c = text[i], next = text[i+1];
+                if (c === '"' && isQuoted && next === '"') { cell += '"'; i++; }
+                else if (c === '"') { isQuoted = !isQuoted; }
+                else if (c === ',' && !isQuoted) { row.push(cell); cell = ''; }
+                else if (c === '\n' && !isQuoted) {
+                    row.push(cell); rows.push(row); row = []; cell = '';
+                    if (text[i-1] === '\r') rows[rows.length-1][rows[rows.length-1].length-1] = rows[rows.length-1][rows[rows.length-1].length-1].slice(0, -1);
+                } else { cell += c; }
             }
+            if (cell !== '' || row.length > 0) { row.push(cell); rows.push(row); }
             
-            const headers = ret[0].map(h => h.trim().toLowerCase()); // 헤더 소문자로 통일
-            const data = [];
-            for (let j = 1; j < ret.length; j++) {
-                if (ret[j].length === 1 && ret[j][0] === "") continue;
+            const headers = rows[0].map(h => h.trim().toLowerCase());
+            return rows.slice(1).map(r => {
                 let obj = {};
-                for (let k = 0; k < headers.length; k++) {
-                    obj[headers[k]] = ret[j][k] ? ret[j][k].trim() : "";
-                }
-                if (obj.id) data.push(obj);
-            }
-            return data;
+                headers.forEach((h, i) => obj[h] = r[i] ? r[i].trim() : "");
+                return obj;
+            }).filter(item => item.id);
         }
 
         const app = document.getElementById('app');
 
-        // 목록 렌더링 (메인 페이지 & 태그 필터링)
-        function renderList(posts, filterTag = null) {
+        // 목록 페이지 그리기
+        function renderList(posts, currentTag = null) {
             app.innerHTML = '';
-            
-            if(filterTag) {
-                app.innerHTML += `<div style="text-align:center; font-size:1.2rem; font-weight:bold; margin-bottom:40px;">[ #${filterTag} ] 태그된 글</div>`;
-            }
+            if (currentTag) app.innerHTML = `<h2 style="text-align:center; margin-bottom: 40px;">#${currentTag}</h2>`;
+            if (posts.length === 0) { app.innerHTML += `<p style="text-align:center;">글이 없습니다.</p>`; return; }
 
-            if(posts.length === 0) {
-                app.innerHTML += '<p style="text-align:center;">해당하는 글이 없습니다.</p>';
-                return;
-            }
-
-            // 최신 글이 위로 오도록 역순 정렬 (id 기준)
             posts.reverse().forEach(post => {
-                const title = post.title || '제목 없음';
-                const date = post.date || '';
-                const content = post.content || '';
+                const tags = post.tags ? post.tags.split(',').map(t => t.trim()).filter(t => t) : [];
+                const tagsHTML = tags.map(t => `<a href="?tag=${encodeURIComponent(t)}">#${t}</a>`).join('');
                 
-                // 태그 쪼개기
-                let tagsArray = [];
-                if(post.tags) {
-                    tagsArray = post.tags.split(',').map(t => t.trim()).filter(t => t !== "");
-                }
-                // 태그 링크 생성
-                const tagsHTML = tagsArray.map(tag => `<a href="?tag=${encodeURIComponent(tag)}">#${tag}</a>`).join('');
-
-                const card = document.createElement('div');
-                card.className = 'post-card';
-                card.innerHTML = `
-                    <div class="post-date">${date}</div>
-                    <a href="?post=${post.id}" class="post-title">${title}</a>
-                    <div class="post-excerpt">${content}</div>
-                    <div class="post-tags">${tagsHTML}</div>
+                app.innerHTML += `
+                    <div class="post-card">
+                        <div class="post-date">${post.date || ''}</div>
+                        <a href="?post=${post.id}" class="post-title">${post.title || '제목 없음'}</a>
+                        <div class="post-excerpt">${post.content || ''}</div>
+                        <div class="tag-list">${tagsHTML}</div>
+                    </div>
                 `;
-                app.appendChild(card);
             });
         }
 
-        // 상세 글 렌더링 (하위 페이지)
+        // 세부 페이지 그리기
         function renderPost(post) {
-            if(!post) {
-                app.innerHTML = '<p style="text-align:center;">글을 찾을 수 없습니다.</p><div style="text-align:center;"><a href="?">돌아가기</a></div>';
-                return;
-            }
+            if (!post) { app.innerHTML = `<p style="text-align:center;">글을 찾을 수 없습니다.</p>`; return; }
             
-            const title = post.title || '제목 없음';
-            const content = post.content || '';
-            let tagsArray = [];
-            if(post.tags) {
-                tagsArray = post.tags.split(',').map(t => t.trim()).filter(t => t !== "");
-            }
-            const tagsHTML = tagsArray.map(tag => `<a href="?tag=${encodeURIComponent(tag)}">#${tag}</a>`).join('');
+            const tags = post.tags ? post.tags.split(',').map(t => t.trim()).filter(t => t) : [];
+            const tagsHTML = tags.map(t => `<a href="?tag=${encodeURIComponent(t)}">#${t}</a>`).join('');
 
             app.innerHTML = `
-                <div class="detail-view">
-                    <div class="detail-title">${title}</div>
-                    <div class="detail-content">${content}</div>
-                    <div class="post-tags" style="text-align: center; margin-top: 50px;">${tagsHTML}</div>
-                    <div style="text-align: center; margin-top: 30px;">
-                        <a href="?" style="font-weight:bold;">[ 목록으로 돌아가기 ]</a>
-                    </div>
+                <div class="detail-wrap">
+                    <div class="detail-title">${post.title || '제목 없음'}</div>
+                    <div class="detail-content">${post.content || ''}</div>
+                    <div class="tag-list" style="text-align:center; margin-top:40px;">${tagsHTML}</div>
+                    <div style="text-align:center; margin-top:30px;"><a href="?">[ 돌아가기 ]</a></div>
                 </div>
             `;
         }
 
-        // 초기화 및 라우팅 (URL 파라미터 감지)
         async function init() {
             try {
                 const response = await fetch(SHEET_CSV_URL);
-                const csvData = await response.text();
-                const posts = parseCSV(csvData);
-
-                const urlParams = new URLSearchParams(window.location.search);
-                const postId = urlParams.get('post');
-                const tag = urlParams.get('tag');
+                const data = parseCSV(await response.text());
+                
+                const params = new URLSearchParams(window.location.search);
+                const postId = params.get('post');
+                const tag = params.get('tag');
 
                 if (postId) {
-                    // id가 일치하는 단일 포스트 찾기
-                    const post = posts.find(p => p.id === postId);
-                    renderPost(post);
+                    renderPost(data.find(p => p.id === postId));
                 } else if (tag) {
-                    // 태그가 포함된 포스트만 필터링
-                    const filteredPosts = posts.filter(p => {
-                        if (!p.tags) return false;
-                        const tArray = p.tags.split(',').map(t => t.trim());
-                        return tArray.includes(tag);
-                    });
-                    renderList(filteredPosts, tag);
+                    renderList(data.filter(p => p.tags && p.tags.split(',').map(t=>t.trim()).includes(tag)), tag);
                 } else {
-                    // 전체 목록
-                    renderList(posts);
+                    renderList(data);
                 }
-            } catch (error) {
-                app.innerHTML = '<p style="text-align:center;">데이터를 불러오는 데 실패했습니다.<br>스프레드시트 URL이 정확한지 확인해주세요.</p>';
-                console.error("데이터 로드 에러:", error);
+            } catch (err) {
+                app.innerHTML = `<p style="text-align:center;">DB 오류 발생</p>`;
             }
         }
-
         init();
     </script>
 </body>
